@@ -1131,6 +1131,7 @@ function greeting(){
 
 function custOverview(c){
   c.append(pageHead(`${greeting()}, ${currentProfile.name?.split(" ")[0]||"there"}`, "Dashboard › Overview"));
+  
   const kpis = el("div",{class:"kpis"});
   ["Active","Completed","Total","Spend"].forEach(l=>{
     kpis.append(el("div",{class:"kpi"},
@@ -1163,52 +1164,77 @@ function custOverview(c){
   c.append(grid);
 
   if(!fbReady){ recList.innerHTML='<div class="empty">Firebase offline</div>'; return; }
-  // live listener
-  const unsub = db.collection("orders").where("customerId","==",currentProfile.id)
-    .orderBy("createdAt","desc").limit(50)
-    .onSnapshot(snap=>{
+  
+  // FIXED: Added error handling
+  const unsub = db.collection("orders")
+    .where("customerId", "==", currentProfile.id)
+    .orderBy("createdAt","desc")
+    .limit(50)
+    .onSnapshot(snap => {
+      console.log("📊 Orders loaded:", snap.size); // Debug log
+      
       const docs = snap.docs.map(d=>({id:d.id,...d.data()}));
+      console.log("First order:", docs[0]); // Debug log
+      
       const active = docs.filter(d=>!["delivered","failed"].includes(d.status)).length;
       const completed = docs.filter(d=>d.status==="delivered").length;
       const total = docs.length;
       const spend = docs.filter(d=>d.status==="delivered").reduce((a,b)=>a+(b.price||0),0);
-      const setKpi=(l,v,s)=>{ const k=c.querySelector(`[data-stat="${l}"]`); if(k){ k.textContent=v; k.nextElementSibling.textContent=s; } };
-      setKpi("Active",active,"in progress");
-      setKpi("Completed",completed,"delivered");
-      setKpi("Total",total,"all time");
-      setKpi("Spend",fmt.ngn(spend),"completed only");
+      
+      const setKpi=(l,v,s)=>{ 
+        const k=c.querySelector(`[data-stat="${l}"]`); 
+        if(k){ 
+          k.textContent=v; 
+          if(k.nextElementSibling) k.nextElementSibling.textContent=s; 
+        } 
+      };
+      
+      setKpi("Active", active, "in progress");
+      setKpi("Completed", completed, "delivered");
+      setKpi("Total", total, "all time");
+      setKpi("Spend", fmt.ngn(spend), "completed only");
 
-      recList.innerHTML="";
-      if(!docs.length){ recList.innerHTML='<div class="empty"><div class="ic">◇</div>No orders yet. Book your first delivery.</div>'; }
-      else docs.slice(0,5).forEach(d=>recList.append(orderRow(d, ()=>openOrderModal(d))));
+      recList.innerHTML = "";
+      if(!docs.length){ 
+        recList.innerHTML='<div class="empty"><div class="ic">◇</div>No orders yet. Book your first delivery.</div>'; 
+      } else {
+        docs.slice(0,5).forEach(d => recList.append(orderRow(d, ()=>openOrderModal(d))));
+      }
 
-      // activity
-      notifList.innerHTML="";
-      docs.slice(0,6).forEach(d=>notifList.append(el("div",{style:{padding:"8px 0",borderBottom:"1px solid var(--line)"}},
-        el("div",{style:{display:"flex",justifyContent:"space-between"}},
-          el("span",{}, d.code||fmt.short(d.id)),
-          statusBadge(d.status)
-        ),
-        el("div",{class:"dim",style:{fontSize:"11.5px",marginTop:"3px"}}, fmt.date(d.createdAt))
-      )));
+      // Activity
+      notifList.innerHTML = "";
+      docs.slice(0,6).forEach(d => {
+        notifList.append(el("div",{style:{padding:"8px 0",borderBottom:"1px solid var(--line)"}},
+          el("div",{style:{display:"flex",justifyContent:"space-between"}},
+            el("span",{}, d.code||fmt.short(d.id)),
+            statusBadge(d.status)
+          ),
+          el("div",{class:"dim",style:{fontSize:"11.5px",marginTop:"3px"}}, fmt.date(d.createdAt))
+        ));
+      });
 
-      // bars: per day count (last 7)
+      // Bars: per day count (last 7)
       const days = new Array(7).fill(0);
       const now = new Date();
-      docs.forEach(d=>{
+      docs.forEach(d => {
         const ts = d.createdAt?.toDate?.()||new Date(d.createdAt||0);
         const diff = Math.floor((now - ts)/(1000*60*60*24));
-        if(diff>=0&&diff<7) days[6-diff]++;
+        if(diff>=0 && diff<7) days[6-diff]++;
       });
       const max = Math.max(1,...days);
       $$(".b",$("#custBars")).forEach((b,i)=>{
         b.style.height = (10 + (days[i]/max)*70)+"px";
         b.classList.toggle("dim", days[i]===0);
       });
+      
+    }, error => {
+      console.error("❌ Firestore error:", error);
+      recList.innerHTML = `<div class="empty">⚠️ Error loading orders: ${error.message}</div>`;
+      toast("Error loading dashboard", "bad");
     });
+  
   liveUnsubs.push(unsub);
 }
-
 function orderRow(d,onClick){
   const r = el("div",{class:"row between",style:{padding:"12px",borderRadius:"10px",background:"var(--surface-2)",marginBottom:"8px",cursor:"pointer"},onclick:onClick});
   r.append(
