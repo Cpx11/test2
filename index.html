@@ -420,7 +420,7 @@ const ADMIN_SECRET = "swiftlag-admin-2025"; // change me
 let fbReady = false, auth=null, db=null, storage=null;
 try{
   if(!firebaseConfig.apiKey.startsWith("REPLACE")){
-    firebase.initializeApp(FIREBASE_CONFIG);
+    firebase.initializeApp(firebaseConfig);
     auth = firebase.auth();
     db   = firebase.firestore();
     storage = firebase.storage();
