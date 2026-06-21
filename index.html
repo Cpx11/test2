@@ -419,7 +419,7 @@ const ADMIN_SECRET = "swiftlag-admin-2025"; // change me
 /* ---------- Firebase init (with offline fallback) ---------- */
 let fbReady = false, auth=null, db=null, storage=null;
 try{
-  if(!FIREBASE_CONFIG.apiKey.startsWith("REPLACE")){
+  if(!firebaseConfig.apiKey.startsWith("REPLACE")){
     firebase.initializeApp(FIREBASE_CONFIG);
     auth = firebase.auth();
     db   = firebase.firestore();
