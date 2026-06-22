@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>SwiftLag — Lagos Logistics & Delivery</title>
+<title>MIMMEX LOGISTICS — Lagos Logistics & Delivery</title>
 <meta name="description" content="Fast & reliable delivery across Lagos. Book, track and manage deliveries in real time." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,7 @@
 
 <style>
 /* =========================================================
-   SWIFTLAG — DESIGN SYSTEM
+   MIMMEX LOGISTICS — DESIGN SYSTEM
    ========================================================= */
 :root{
   --bg:#0b0f1a;
@@ -345,7 +345,7 @@ tbody tr:hover{background:rgba(255,255,255,.02)}
       <button class="back-btn" id="backBtn" title="Back" style="display:none">←</button>
       <div class="brand" data-nav="home">
         <div class="brand-mark"></div>
-        <span>SwiftLag</span>
+        <span>MIMMEX LOGISTICS</span>
       </div>
     </div>
     <div class="nav-links" id="publicNav">
@@ -378,7 +378,7 @@ tbody tr:hover{background:rgba(255,255,255,.02)}
 <!-- footer (public only) -->
 <footer id="footer">
   <div class="container row">
-    <div>© <span id="yr"></span> SwiftLag Logistics — Lagos, Nigeria.</div>
+    <div>© <span id="yr"></span> MIMMEX LOGISTICS Logistics — Lagos, Nigeria.</div>
     <div class="row" style="gap:18px">
       <a data-nav="about">About</a>
       <a data-nav="services">Services</a>
@@ -394,7 +394,7 @@ tbody tr:hover{background:rgba(255,255,255,.02)}
 
 <script>
 /* =========================================================
-   SWIFTLAG — APPLICATION
+   MIMMEX LOGISTICS — APPLICATION
    Single-file HTML/CSS/JS + Firebase (compat SDK).
 
    >>>>>> CONFIGURE BEFORE DEPLOY <<<<<<
@@ -414,7 +414,7 @@ const firebaseConfig = {
   appId: "1:244726336780:web:6fb74d7eec213cf6c60d29"
 };
 
-const ADMIN_SECRET = "swiftlag-admin-2025"; // change me
+const ADMIN_SECRET = "delight"; // change me
 
 /* ---------- Firebase init (with offline fallback) ---------- */
 let fbReady = false, auth=null, db=null, storage=null;
@@ -621,7 +621,7 @@ function renderHome(root){
   // testimonials
   const tt = [
     {who:"Adaeze O.",txt:"My documents got to VI in 18 minutes. The live tracker is addictive."},
-    {who:"Tunde A.",txt:"I run a small store on Instagram — SwiftLag is now our only dispatch."},
+    {who:"Tunde A.",txt:"I run a small store on Instagram — MIMMEX LOGISTICS is now our only dispatch."},
     {who:"Chiamaka N.",txt:"OTP delivery means I trust them with cash payments. Big deal."},
     {who:"Kelechi U.",txt:"Night delivery saved my product launch. Rider was at my door in 25 min."},
     {who:"Bola S.",txt:"Pricing is transparent. Customers see the same number I see."},
@@ -800,7 +800,7 @@ function renderAbout(root){
     el("div",{class:"container",style:{maxWidth:"760px"}},
       el("h2",{},"We move Lagos, one parcel at a time"),
       el("p",{class:"sub",style:{lineHeight:1.7,marginTop:"18px"}},
-        "SwiftLag was built by Lagosians for Lagosians. We obsess over pickup time, transparent pricing, and rider safety. Every order flows through an OTP-verified handoff and our riders use live navigation to your door."),
+        "MIMMEX LOGISTICS was built by Lagosians for Lagosians. We obsess over pickup time, transparent pricing, and rider safety. Every order flows through an OTP-verified handoff and our riders use live navigation to your door."),
       el("p",{class:"muted",style:{lineHeight:1.7,marginTop:"14px"}},
         "Behind the scenes, a single real-time engine keeps customers, riders and operations on the same page. When a rider taps 'picked up', your tracker updates instantly. When admin updates pricing, the calculator updates for everyone."),
     )
@@ -952,7 +952,7 @@ function renderRegister(root){
   const card = el("div",{class:"card auth-card glass"});
   card.innerHTML=`
     <h2>Create your account</h2>
-    <div class="sub">Pick how you want to use SwiftLag.</div>
+    <div class="sub">Pick how you want to use MIMMEX LOGISTICS.</div>
     <div class="role-tabs">
       <div class="role-tab active" data-role="customer">Customer</div>
       <div class="role-tab" data-role="rider">Rider</div>
@@ -982,7 +982,7 @@ function renderRegister(root){
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         ...(role==="rider"?{online:false,verified:false,rating:5,completedJobs:0,earnings:0}:{})
       });
-      toast("Welcome to SwiftLag, "+name.split(" ")[0],"good");
+      toast("Welcome to MIMMEX LOGISTICS, "+name.split(" ")[0],"good");
     }catch(e){ console.error(e); toast(e.message||"Failed","bad"); }
     finally{ $("#rgBtn").disabled=false; $("#rgBtn").textContent="Create account"; }
   };
